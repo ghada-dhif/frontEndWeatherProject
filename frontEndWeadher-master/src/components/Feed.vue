@@ -22,9 +22,17 @@
 </template>
 
 <script>
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:3001/', {
+  reconnectionDelayMax: 10000})
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Feed',
+  async mounted () {
+    socket.on('news', (data) => {
+      this.cityData = data
+    })
+  },
 }
 </script>
 
