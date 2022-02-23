@@ -6,15 +6,15 @@
       <div class="weather-wrap">
         <div class="location-box">
           <div class="location">
-            <p>City Name</p>
+            <p>{{ cityData.name }}</p>
           </div>
           <div class="date">
-           date
+            {{ new Date().toISOString().substr(0,10)}}
           </div>
         </div>
         <div class="weather-box">
-          <div class="temp">temperature°F</div>
-          <div class="weather">weather</div>
+          <div class="temp">{{ cityData.main.temp || 0 }}°F</div>
+          <div class="weather">{{ cityData.weather[0].main|| "clear" }}</div>
         </div>
       </div>
     </main>
@@ -23,16 +23,34 @@
 
 <script>
 import { io } from 'socket.io-client'
+
 const socket = io('http://localhost:3001/', {
   reconnectionDelayMax: 10000})
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Feed',
+  data () {
+    return {
+      msg: 'Welcome to feed',
+      counter: 0,
+      weather: [],
+      errors: [],
+      test: [],
+      city: '',
+      index: 0,
+      cityData: {name: '', main: {temp: 0}, weather: [{main: ''}]}
+    }
+  },
   async mounted () {
     socket.on('news', (data) => {
       this.cityData = data
     })
   },
+  methods: {
+    setTheData (data) {
+      this.cityData = data
+    }
+  }
 }
 </script>
 
